@@ -1,0 +1,10 @@
+desc: Health Check
+runners:
+  req: ${API_HOST}
+steps:
+  healthCheck:
+    desc: Health Check
+    req:
+      /health:
+        get: {}
+    test: current.res.status == 200
