@@ -12,7 +12,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       username: 'user',
       password: 'password',
       database: 'main',
-      entities: [],
+      autoLoadEntities: true
     }),
   ],
   controllers: [HealthController],
