@@ -1,0 +1,14 @@
+name: Lint and Format
+on: [push]
+jobs:
+  lint-and-format:
+    name: Run Lint and Format
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Dependencies
+        run: npm install
+      - name: Run Lint
+        run: npm run lint
+      - name: Run Format
+        run: npm run format
