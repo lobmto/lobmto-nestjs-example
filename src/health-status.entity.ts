@@ -6,8 +6,8 @@ export class Status {
   id: number;
 
   @Column({
-    type: "enum",
-    enum: ["UP"]
+    type: 'enum',
+    enum: ['UP'],
   })
-  status: "UP";
+  status: 'UP';
 }

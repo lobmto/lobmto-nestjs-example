@@ -14,14 +14,11 @@ import { Status } from './health-status.entity';
       username: 'user',
       password: 'password',
       database: 'main',
-      autoLoadEntities: true
+      autoLoadEntities: true,
     }),
-    TypeOrmModule.forFeature([Status])
+    TypeOrmModule.forFeature([Status]),
   ],
   controllers: [HealthController],
-  providers: [
-    HealthService, 
-    HealthRepository
-  ],
+  providers: [HealthService, HealthRepository],
 })
 export class AppModule {}
