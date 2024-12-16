@@ -1,6 +1,8 @@
 desc: Health Check
 runners:
-  req: ${API_HOST}
+  req: 
+    endpoint: ${API_HOST}
+    openapi3: ../openapi/main.yaml
 steps:
   healthCheck:
     desc: Health Check
