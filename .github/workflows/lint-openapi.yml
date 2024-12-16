@@ -1,0 +1,13 @@
+name: Lint OpenAPI
+on:
+  push:
+    paths:
+      - 'openapi/**'
+jobs:
+  lint-openapi:
+    name: Run Lint OpenAPI
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run Lint OpenAPI
+        run: npm run lint:openapi
