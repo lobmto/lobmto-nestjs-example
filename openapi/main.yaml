@@ -35,3 +35,5 @@ paths:
                     type: string
                     enum: ['UP']
                     example: 'UP'
+                required:
+                  - status
