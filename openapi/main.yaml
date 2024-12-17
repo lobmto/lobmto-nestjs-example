@@ -1,31 +1,31 @@
 openapi: 3.0.0
 info:
-  title: "ヘルスチェックAPI"
-  version: "1.0.0"
-  description: "example API"
+  title: 'ヘルスチェックAPI'
+  version: '1.0.0'
+  description: 'example API'
   contact:
-    name: "contact"
-    url: "https://github.com/lobmto/lobmto-nestjs-example.git"
+    name: 'contact'
+    url: 'https://github.com/lobmto/lobmto-nestjs-example.git'
 
 servers:
-  - url: "http://localhost:3000"
-    description: "ローカル開発環境"
+  - url: 'http://localhost:3000'
+    description: 'ローカル開発環境'
 
 tags:
-  - name: "Health"
-    description: "ヘルスチェック"
+  - name: 'Health'
+    description: 'ヘルスチェック'
 
 paths:
   /health:
     get:
       tags:
-        - "Health"
-      operationId: "getHealth"
-      summary: "ヘルスチェックAPI"
-      description: "サービスの稼働状態を返却する"
+        - 'Health'
+      operationId: 'getHealth'
+      summary: 'ヘルスチェックAPI'
+      description: 'サービスの稼働状態を返却する'
       responses:
         '200':
-          description: "正常"
+          description: '正常'
           content:
             application/json:
               schema:
@@ -33,5 +33,5 @@ paths:
                 properties:
                   status:
                     type: string
-                    enum: ["UP"]
-                    example: "UP"
+                    enum: ['UP']
+                    example: 'UP'
