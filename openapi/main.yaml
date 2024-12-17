@@ -14,6 +14,8 @@ servers:
 tags:
   - name: 'Health'
     description: 'ヘルスチェック'
+  - name: 'Word'
+    description: '単語'
 
 paths:
   /health:
@@ -37,3 +39,38 @@ paths:
                     example: 'UP'
                 required:
                   - status
+  /words:
+    get:
+      tags:
+        - 'Word'
+      operationId: 'getWordList'
+      summary: '単語一覧取得API'
+      description: '単語の一覧を取得する'
+      responses:
+        '200':
+          description: '正常'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  words:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                        word:
+                          type: string
+                          example: 'example'
+                        meaning:
+                          type: string
+                          example: '例'
+                      required:
+                        - id
+                        - word
+                        - meaning
+                required:
+                  - words
