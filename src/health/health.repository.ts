@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Status } from './health-status.entity';
 import { Repository } from 'typeorm';
+import { Status } from './health-status.entity';
 
 @Injectable()
 export class HealthRepository {
