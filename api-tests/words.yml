@@ -1,0 +1,12 @@
+desc: Health Check
+runners:
+  req:
+    endpoint: ${API_HOST}
+    openapi3: ../openapi/main.yaml
+steps:
+  getWords:
+    desc: 単語一覧取得
+    req:
+      /words:
+        get: {}
+    test: current.res.status == 200
