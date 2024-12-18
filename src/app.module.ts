@@ -1,9 +1,6 @@
 import { Module } from '@nestjs/common';
-import { HealthController } from './health.controller';
-import { HealthService } from './health.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { HealthRepository } from './health.repository';
-import { Status } from './health-status.entity';
+import { HealthModule } from './health/health.module';
 
 @Module({
   imports: [
@@ -16,9 +13,7 @@ import { Status } from './health-status.entity';
       database: 'main',
       autoLoadEntities: true,
     }),
-    TypeOrmModule.forFeature([Status]),
+    HealthModule,
   ],
-  controllers: [HealthController],
-  providers: [HealthService, HealthRepository],
 })
 export class AppModule {}
