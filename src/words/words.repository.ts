@@ -13,4 +13,8 @@ export class WordsRepository {
   async findWords(): Promise<Word[]> {
     return await this.wordsRepository.find();
   }
+
+  async registerWord(word: Word): Promise<Word> {
+    return await this.wordsRepository.save(word);
+  }
 }

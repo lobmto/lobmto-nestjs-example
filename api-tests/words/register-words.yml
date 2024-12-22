@@ -1,0 +1,16 @@
+desc: 単語登録
+runners:
+  req:
+    endpoint: ${API_HOST}
+    openapi3: ../../openapi/main.yaml
+steps:
+  getWords:
+    desc: 単語登録
+    req:
+      /words:
+        post:
+          body:
+            application/json:
+              word: example
+              meaning: 例
+    test: current.res.status == 201
