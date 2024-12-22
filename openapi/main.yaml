@@ -60,17 +60,26 @@ paths:
                       type: object
                       properties:
                         id:
-                          type: string
-                          format: uuid
+                          $ref: '#/components/schemas/id'
                         word:
-                          type: string
-                          example: 'example'
+                          $ref: '#/components/schemas/word'
                         meaning:
-                          type: string
-                          example: '例'
+                          $ref: '#/components/schemas/meaning'
                       required:
                         - id
                         - word
                         - meaning
                 required:
                   - words
+
+components:
+  schemas:
+    id:
+      type: string
+      format: uuid
+    word:
+      type: string
+      example: 'example'
+    meaning:
+      type: string
+      example: '例'
