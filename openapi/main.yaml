@@ -71,6 +71,45 @@ paths:
                         - meaning
                 required:
                   - words
+    post:
+      tags:
+        - 'Word'
+      operationId: 'registerWord'
+      summary: '単語登録API'
+      description: '新しい単語を追加する'
+      requestBody:
+        description: '追加する単語'
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                word:
+                  $ref: '#/components/schemas/word'
+                meaning:
+                  $ref: '#/components/schemas/meaning'
+              required:
+                - word
+                - meaning
+      responses:
+        '201':
+          description: '正常'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    $ref: '#/components/schemas/id'
+                  word:
+                    $ref: '#/components/schemas/word'
+                  meaning:
+                    $ref: '#/components/schemas/meaning'
+                required:
+                  - id
+                  - word
+                  - meaning
 
 components:
   schemas:
