@@ -1,10 +1,16 @@
-desc: 単語登録
+desc: 単語の CRUD テスト
 runners:
   req:
     endpoint: ${API_HOST}
-    openapi3: ../../openapi/main.yaml
+    openapi3: ../openapi/main.yaml
 steps:
   getWords:
+    desc: 単語一覧取得
+    req:
+      /words:
+        get: {}
+    test: current.res.status == 200
+  registerWord:
     desc: 単語登録
     req:
       /words:
