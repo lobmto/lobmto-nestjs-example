@@ -1,4 +1,4 @@
-import { IsString } from 'class-validator';
+import { IsOptional, IsString } from 'class-validator';
 
 export class RegisterWordRequest {
   @IsString()
@@ -6,4 +6,14 @@ export class RegisterWordRequest {
 
   @IsString()
   meaning: string;
+}
+
+export class UpdateWordRequest {
+  @IsString()
+  @IsOptional()
+  word?: string;
+
+  @IsString()
+  @IsOptional()
+  meaning?: string;
 }

@@ -17,4 +17,12 @@ export class WordsRepository {
   async registerWord(word: Word): Promise<Word> {
     return await this.wordsRepository.save(word);
   }
+
+  async updateWord(
+    id: string,
+    data: { word?: string; meaning?: string },
+  ): Promise<void> {
+    if (Object.keys(data).length === 0) return;
+    await this.wordsRepository.update(id, data);
+  }
 }

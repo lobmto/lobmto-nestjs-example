@@ -20,3 +20,13 @@ steps:
               word: example
               meaning: 例
     test: current.res.status == 201
+  updateWord:
+    desc: 単語更新
+    req:
+      /words/{{ steps.registerWord.res.body.id }}:
+        patch:
+          body:
+            application/json:
+              word: example2
+              meaning: 例2
+    test: current.res.status == 204

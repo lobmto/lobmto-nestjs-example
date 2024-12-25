@@ -18,4 +18,12 @@ export class WordsService {
 
     return this.wordsRepository.registerWord(word);
   }
+
+  // FIXME: 404 エラーを追加する
+  async updateWord(
+    id: string,
+    data: { word?: string; meaning?: string },
+  ): Promise<void> {
+    await this.wordsRepository.updateWord(id, data);
+  }
 }
