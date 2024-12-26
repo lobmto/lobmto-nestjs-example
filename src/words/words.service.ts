@@ -19,7 +19,6 @@ export class WordsService {
     return this.wordsRepository.registerWord(word);
   }
 
-  // FIXME: 404 エラーを追加する
   async updateWord(
     id: string,
     data: { word?: string; meaning?: string },
@@ -36,5 +35,17 @@ export class WordsService {
     }
 
     return word;
+  }
+
+  // FIXME: 404 エラーを追加する
+  async deleteWord(id: string): Promise<void> {
+    const result = await this.wordsRepository.deleteWord(id);
+
+    // TODO: エラー定義を見直す（エラーコードなど）
+    if (!result) {
+      throw new NotFoundException(`ID: ${id} の単語が見つかりません`);
+    }
+
+    return;
   }
 }

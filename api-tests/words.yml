@@ -36,3 +36,9 @@ steps:
       /words/{{ steps.registerWord.res.body.id }}:
         get: {}
     test: current.res.status == 200
+  deleteWord:
+    desc: 単語削除
+    req:
+      /words/{{ steps.registerWord.res.body.id }}:
+        delete: {}
+    test: current.res.status == 204

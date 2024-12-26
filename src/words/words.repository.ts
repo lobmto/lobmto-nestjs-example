@@ -29,4 +29,9 @@ export class WordsRepository {
   async findById(id: string): Promise<Word | null> {
     return await this.wordsRepository.findOne({ where: { id } });
   }
+
+  async deleteWord(id: string): Promise<boolean> {
+    const result = await this.wordsRepository.delete(id);
+    return (result.affected ?? 0) > 0;
+  }
 }

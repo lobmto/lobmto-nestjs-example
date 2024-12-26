@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   Param,
@@ -60,5 +61,12 @@ export class WordsController {
       word: word.word,
       meaning: word.meaning,
     };
+  }
+
+  // TODO: ID のバリデーション
+  @Delete(':id')
+  @HttpCode(204)
+  async deleteWord(@Param('id') id: string): Promise<void> {
+    await this.wordsService.deleteWord(id);
   }
 }
