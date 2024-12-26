@@ -138,6 +138,42 @@ paths:
       responses:
         '204':
           description: '正常'
+    get:
+      tags:
+        - 'Word'
+      operationId: 'getWord'
+      summary: '単語詳細取得API'
+      description: '単語IDを指定して、単語の詳細情報を取得する'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/id'
+      responses:
+        '200':
+          description: '正常'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    $ref: '#/components/schemas/id'
+                  word:
+                    $ref: '#/components/schemas/word'
+                  meaning:
+                    $ref: '#/components/schemas/meaning'
+                required:
+                  - id
+                  - word
+                  - meaning
+        '404':
+          description: 'Not Found'
+          content:
+            application/json:
+              schema:
+                type: object
 
 components:
   schemas:
