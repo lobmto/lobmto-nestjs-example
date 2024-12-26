@@ -48,4 +48,17 @@ export class WordsController {
   ): Promise<void> {
     await this.wordsService.updateWord(id, partialWord);
   }
+
+  // TODO: ID のバリデーション
+  @Get(':id')
+  async getWord(
+    @Param('id') id: string,
+  ): Promise<{ id: string; word: string; meaning: string }> {
+    const word = await this.wordsService.findById(id);
+    return {
+      id: word.id,
+      word: word.word,
+      meaning: word.meaning,
+    };
+  }
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Word } from './word.entity';
 import { WordsRepository } from './words.repository';
 
@@ -25,5 +25,16 @@ export class WordsService {
     data: { word?: string; meaning?: string },
   ): Promise<void> {
     await this.wordsRepository.updateWord(id, data);
+  }
+
+  async findById(id: string): Promise<Word> {
+    const word = await this.wordsRepository.findById(id);
+
+    // TODO: エラー定義を見直す（エラーコードなど）
+    if (!word) {
+      throw new NotFoundException(`ID: ${id} の単語が見つかりません`);
+    }
+
+    return word;
   }
 }

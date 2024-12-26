@@ -30,3 +30,9 @@ steps:
               word: example2
               meaning: 例2
     test: current.res.status == 204
+  getWord:
+    desc: 単語取得
+    req:
+      /words/{{ steps.registerWord.res.body.id }}:
+        get: {}
+    test: current.res.status == 200

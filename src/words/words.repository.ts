@@ -25,4 +25,8 @@ export class WordsRepository {
     if (Object.keys(data).length === 0) return;
     await this.wordsRepository.update(id, data);
   }
+
+  async findById(id: string): Promise<Word | null> {
+    return await this.wordsRepository.findOne({ where: { id } });
+  }
 }
