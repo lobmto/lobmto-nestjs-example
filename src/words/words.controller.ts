@@ -8,7 +8,11 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
-import { RegisterWordRequest, UpdateWordRequest } from './words.request';
+import {
+  RegisterWordRequest,
+  UpdateWordRequest,
+  WordIdRequest,
+} from './words.request';
 import { WordsService } from './words.service';
 
 @Controller('/words')
@@ -41,10 +45,9 @@ export class WordsController {
     };
   }
 
-  // TODO: ID のバリデーション
   @Get(':id')
   async getWord(
-    @Param('id') id: string,
+    @Param() { id }: WordIdRequest,
   ): Promise<{ id: string; word: string; meaning: string }> {
     const word = await this.wordsService.findById(id);
     return {
@@ -57,16 +60,15 @@ export class WordsController {
   @Patch(':id')
   @HttpCode(204)
   async updateWord(
-    @Param('id') id: string,
+    @Param() { id }: WordIdRequest,
     @Body() partialWord: UpdateWordRequest,
   ): Promise<void> {
     await this.wordsService.updateWord(id, partialWord);
   }
 
-  // TODO: ID のバリデーション
   @Delete(':id')
   @HttpCode(204)
-  async deleteWord(@Param('id') id: string): Promise<void> {
+  async deleteWord(@Param() { id }: WordIdRequest): Promise<void> {
     await this.wordsService.deleteWord(id);
   }
 }
