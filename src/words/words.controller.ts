@@ -41,15 +41,6 @@ export class WordsController {
     };
   }
 
-  @Patch(':id')
-  @HttpCode(204)
-  async updateWord(
-    @Param('id') id: string,
-    @Body() partialWord: UpdateWordRequest,
-  ): Promise<void> {
-    await this.wordsService.updateWord(id, partialWord);
-  }
-
   // TODO: ID のバリデーション
   @Get(':id')
   async getWord(
@@ -61,6 +52,15 @@ export class WordsController {
       word: word.word,
       meaning: word.meaning,
     };
+  }
+
+  @Patch(':id')
+  @HttpCode(204)
+  async updateWord(
+    @Param('id') id: string,
+    @Body() partialWord: UpdateWordRequest,
+  ): Promise<void> {
+    await this.wordsService.updateWord(id, partialWord);
   }
 
   // TODO: ID のバリデーション

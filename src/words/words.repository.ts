@@ -18,16 +18,16 @@ export class WordsRepository {
     return await this.wordsRepository.save(word);
   }
 
+  async findById(id: string): Promise<Word | null> {
+    return await this.wordsRepository.findOne({ where: { id } });
+  }
+
   async updateWord(
     id: string,
     data: { word?: string; meaning?: string },
   ): Promise<void> {
     if (Object.keys(data).length === 0) return;
     await this.wordsRepository.update(id, data);
-  }
-
-  async findById(id: string): Promise<Word | null> {
-    return await this.wordsRepository.findOne({ where: { id } });
   }
 
   async deleteWord(id: string): Promise<boolean> {

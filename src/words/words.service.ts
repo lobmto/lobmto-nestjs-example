@@ -19,13 +19,6 @@ export class WordsService {
     return this.wordsRepository.registerWord(word);
   }
 
-  async updateWord(
-    id: string,
-    data: { word?: string; meaning?: string },
-  ): Promise<void> {
-    await this.wordsRepository.updateWord(id, data);
-  }
-
   async findById(id: string): Promise<Word> {
     const word = await this.wordsRepository.findById(id);
 
@@ -35,6 +28,13 @@ export class WordsService {
     }
 
     return word;
+  }
+
+  async updateWord(
+    id: string,
+    data: { word?: string; meaning?: string },
+  ): Promise<void> {
+    await this.wordsRepository.updateWord(id, data);
   }
 
   // FIXME: 404 エラーを追加する

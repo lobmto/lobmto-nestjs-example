@@ -111,33 +111,6 @@ paths:
                   - word
                   - meaning
   /words/{id}:
-    patch:
-      tags:
-        - 'Word'
-      operationId: 'updateWord'
-      summary: '単語更新API'
-      description: '既存の単語を更新する'
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            $ref: '#/components/schemas/id'
-      requestBody:
-        description: '更新する単語の情報'
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                word:
-                  $ref: '#/components/schemas/word'
-                meaning:
-                  $ref: '#/components/schemas/meaning'
-      responses:
-        '204':
-          description: '正常'
     get:
       tags:
         - 'Word'
@@ -174,6 +147,33 @@ paths:
             application/json:
               schema:
                 type: object
+    patch:
+      tags:
+        - 'Word'
+      operationId: 'updateWord'
+      summary: '単語更新API'
+      description: '既存の単語を更新する'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/id'
+      requestBody:
+        description: '更新する単語の情報'
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                word:
+                  $ref: '#/components/schemas/word'
+                meaning:
+                  $ref: '#/components/schemas/meaning'
+      responses:
+        '204':
+          description: '正常'
     delete:
       tags:
         - 'Word'
