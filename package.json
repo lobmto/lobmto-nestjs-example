@@ -7,7 +7,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "build": "nest build -b swc",
-    "format": "prettier --check \"src/**/*.ts\" \"test/**/*.ts\"",
+    "format": "prettier --check \"src/**/*.ts\"",
     "start": "nest start -b swc",
     "start:dev": "nest start --watch -b swc",
     "start:debug": "nest start --debug --watch -b swc",
