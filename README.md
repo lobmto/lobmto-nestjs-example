@@ -50,6 +50,20 @@ npm run start
   npm run migration:run
   ```
 
+- ユニットテストの実行
+  ```sh
+  npm run test
+  ```
+  - VSCode でファイルを保存するとテストが自動実行される
+  - カバレッジが `GutterFormatter` で表示される
+
+- e2e テストの実行
+  ```sh
+  npm run test:e2e
+  ```
+  - VSCode でファイルを保存するとテストが自動実行される
+  - カバレッジが `GutterFormatter` で表示される
+
 - API テストの実行
   ```sh
   npm run test:api

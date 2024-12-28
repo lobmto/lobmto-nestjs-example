@@ -14,11 +14,8 @@
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --max-warnings=0",
     "lint:openapi": "npx --yes @stoplight/spectral-cli lint openapi/main.yaml",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:cov": "jest --coverage",
-    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "test": "jest ./src/**/*.spec.ts",
+    "test:e2e": "jest ./e2e-test/*.e2e-spec.ts",
     "test:api": "runn --scopes read:parent run api-tests/*.yml",
     "migration:generate": "typeorm-ts-node-commonjs migration:generate -d ./src/ormconfig.ts src/migrations/migrate",
     "migration:run": "typeorm-ts-node-commonjs migration:run -d ./src/ormconfig.ts"
@@ -68,8 +65,8 @@
       "json",
       "ts"
     ],
-    "rootDir": "src",
-    "testRegex": ".*\\.spec\\.ts$",
+    "rootDir": ".",
+    "testRegex": ".*\\.(spec|e2e-spec)\\.ts$",
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
     },
