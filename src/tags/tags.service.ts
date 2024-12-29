@@ -1,24 +1,22 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { TagEntity } from './tag.entity';
+import { Tag } from './tag.domain';
 import { TagsRepository } from './tags.repository';
 
 @Injectable()
 export class TagsService {
-  constructor(private readonly tagsRepository: TagsRepository) {}
+  constructor(private tagsRepository: TagsRepository) {}
 
-  async findTags(): Promise<TagEntity[]> {
+  async findTags(): Promise<Tag[]> {
     return this.tagsRepository.findTags();
   }
 
-  async registerTag(data: { name: string }): Promise<TagEntity> {
-    // FIXME: プロパティの追加漏れがあったら静的解析でエラーになるようにしたい
-    const tag = new TagEntity();
-    tag.name = data.name;
+  async registerTag(data: { name: string }): Promise<Tag> {
+    const tag = Tag.create(data.name);
 
     return this.tagsRepository.registerTag(tag);
   }
 
-  async findById(id: string): Promise<TagEntity> {
+  async findById(id: string): Promise<Tag> {
     const tag = await this.tagsRepository.findById(id);
 
     if (!tag) {
@@ -29,13 +27,14 @@ export class TagsService {
   }
 
   async updateTag(id: string, data: { name?: string }): Promise<void> {
+    // NOTE: 整合性は不要なのでトランザクションは設定していない
     const tag = await this.tagsRepository.findById(id);
-
     if (!tag) {
       throw new NotFoundException(`ID: ${id} のタグが見つかりません`);
     }
 
-    await this.tagsRepository.updateTag(id, data);
+    const updatedTag = tag.createUpdated(data);
+    await this.tagsRepository.updateTag(updatedTag);
   }
 
   async deleteTag(id: string): Promise<void> {
@@ -44,7 +43,5 @@ export class TagsService {
     if (!result) {
       throw new NotFoundException(`ID: ${id} のタグが見つかりません`);
     }
-
-    return;
   }
 }

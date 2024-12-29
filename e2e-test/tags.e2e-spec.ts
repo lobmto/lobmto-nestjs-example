@@ -1,5 +1,7 @@
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
+import { HttpExceptionFilter } from 'src/exception-filters/http-error.filter';
+import { CustomLogger } from 'src/logger/custom-logger';
 import { RegisterTagRequest, UpdateTagRequest } from 'src/tags/tags.request';
 import * as request from 'supertest';
 import { AppModule } from '../src/app.module';
@@ -19,6 +21,8 @@ describe('TagsController (e2e)', () => {
         forbidNonWhitelisted: true,
       }),
     );
+    app.useLogger(app.get(CustomLogger));
+    app.useGlobalFilters(new HttpExceptionFilter(app.get(CustomLogger)));
     await app.init();
   });
 
