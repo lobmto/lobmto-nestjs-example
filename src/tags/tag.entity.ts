@@ -1,7 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity()
-export class Tag {
+@Entity('tag')
+export class TagEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 

@@ -1,25 +1,28 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Word } from './word.entity';
+import { WordEntity } from './word.entity';
 import { WordsRepository } from './words.repository';
 
 @Injectable()
 export class WordsService {
   constructor(private wordsRepository: WordsRepository) {}
 
-  async findWords(): Promise<Word[]> {
+  async findWords(): Promise<WordEntity[]> {
     return this.wordsRepository.findWords();
   }
 
-  async registerWord(data: { word: string; meaning: string }): Promise<Word> {
+  async registerWord(data: {
+    word: string;
+    meaning: string;
+  }): Promise<WordEntity> {
     // FIXME: プロパティの追加漏れがあったら静的解析でエラーになるようにしたい
-    const word = new Word();
+    const word = new WordEntity();
     word.word = data.word;
     word.meaning = data.meaning;
 
     return this.wordsRepository.registerWord(word);
   }
 
-  async findById(id: string): Promise<Word> {
+  async findById(id: string): Promise<WordEntity> {
     const word = await this.wordsRepository.findById(id);
 
     if (!word) {

@@ -1,24 +1,24 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Tag } from './tag.entity';
+import { TagEntity } from './tag.entity';
 import { TagsRepository } from './tags.repository';
 
 @Injectable()
 export class TagsService {
   constructor(private readonly tagsRepository: TagsRepository) {}
 
-  async findTags(): Promise<Tag[]> {
+  async findTags(): Promise<TagEntity[]> {
     return this.tagsRepository.findTags();
   }
 
-  async registerTag(data: { name: string }): Promise<Tag> {
+  async registerTag(data: { name: string }): Promise<TagEntity> {
     // FIXME: プロパティの追加漏れがあったら静的解析でエラーになるようにしたい
-    const tag = new Tag();
+    const tag = new TagEntity();
     tag.name = data.name;
 
     return this.tagsRepository.registerTag(tag);
   }
 
-  async findById(id: string): Promise<Tag> {
+  async findById(id: string): Promise<TagEntity> {
     const tag = await this.tagsRepository.findById(id);
 
     if (!tag) {
