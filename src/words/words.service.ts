@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Word } from './word.entity';
+import { Word } from './word.domain';
 import { WordsRepository } from './words.repository';
 
 @Injectable()
@@ -11,10 +11,7 @@ export class WordsService {
   }
 
   async registerWord(data: { word: string; meaning: string }): Promise<Word> {
-    // FIXME: プロパティの追加漏れがあったら静的解析でエラーになるようにしたい
-    const word = new Word();
-    word.word = data.word;
-    word.meaning = data.meaning;
+    const word = Word.create(data.word, data.meaning);
 
     return this.wordsRepository.registerWord(word);
   }
@@ -33,13 +30,14 @@ export class WordsService {
     id: string,
     data: { word?: string; meaning?: string },
   ): Promise<void> {
-    const word = await this.findById(id);
-
+    // NOTE: 整合性は不要なのでトランザクションは設定していない
+    const word = await this.wordsRepository.findById(id);
     if (!word) {
       throw new NotFoundException(`ID: ${id} の単語が見つかりません`);
     }
 
-    await this.wordsRepository.updateWord(id, data);
+    const updatedWord = word.createUpdated(data);
+    await this.wordsRepository.updateWord(updatedWord);
   }
 
   async deleteWord(id: string): Promise<void> {
@@ -48,7 +46,5 @@ export class WordsService {
     if (!result) {
       throw new NotFoundException(`ID: ${id} の単語が見つかりません`);
     }
-
-    return;
   }
 }

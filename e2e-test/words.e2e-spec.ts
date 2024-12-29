@@ -1,5 +1,7 @@
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
+import { HttpExceptionFilter } from 'src/exception-filters/http-error.filter';
+import { CustomLogger } from 'src/logger/custom-logger';
 import * as request from 'supertest';
 import { AppModule } from '../src/app.module';
 import {
@@ -10,7 +12,7 @@ import {
 describe('WordsController (e2e)', () => {
   let app: INestApplication;
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
@@ -22,6 +24,8 @@ describe('WordsController (e2e)', () => {
         forbidNonWhitelisted: true,
       }),
     );
+    app.useLogger(app.get(CustomLogger));
+    app.useGlobalFilters(new HttpExceptionFilter(app.get(CustomLogger)));
     await app.init();
   });
 

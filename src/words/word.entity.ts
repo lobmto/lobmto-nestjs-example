@@ -1,7 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity()
-export class Word {
+@Entity('word')
+export class WordEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
