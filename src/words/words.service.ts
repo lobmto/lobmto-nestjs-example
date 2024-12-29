@@ -22,7 +22,6 @@ export class WordsService {
   async findById(id: string): Promise<Word> {
     const word = await this.wordsRepository.findById(id);
 
-    // TODO: エラー定義を見直す（エラーコードなど）
     if (!word) {
       throw new NotFoundException(`ID: ${id} の単語が見つかりません`);
     }
@@ -34,14 +33,18 @@ export class WordsService {
     id: string,
     data: { word?: string; meaning?: string },
   ): Promise<void> {
+    const word = await this.findById(id);
+
+    if (!word) {
+      throw new NotFoundException(`ID: ${id} の単語が見つかりません`);
+    }
+
     await this.wordsRepository.updateWord(id, data);
   }
 
-  // FIXME: 404 エラーを追加する
   async deleteWord(id: string): Promise<void> {
     const result = await this.wordsRepository.deleteWord(id);
 
-    // TODO: エラー定義を見直す（エラーコードなど）
     if (!result) {
       throw new NotFoundException(`ID: ${id} の単語が見つかりません`);
     }
