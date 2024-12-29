@@ -16,6 +16,8 @@ tags:
     description: 'ヘルスチェック'
   - name: 'Word'
     description: '単語'
+  - name: 'Tag'
+    description: 'タグ'
 
 paths:
   /health:
@@ -191,6 +193,144 @@ paths:
           description: '正常'
         '404':
           description: 'Not Found'
+  /tags:
+    get:
+      tags:
+        - 'Tag'
+      operationId: 'getTagList'
+      summary: 'タグ一覧取得API'
+      description: 'タグの一覧を取得する'
+      responses:
+        '200':
+          description: '正常'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  tags:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          $ref: '#/components/schemas/id'
+                        name:
+                          $ref: '#/components/schemas/tagName'
+                      required:
+                        - id
+                        - name
+                required:
+                  - tags
+    post:
+      tags:
+        - 'Tag'
+      operationId: 'registerTag'
+      summary: 'タグ登録API'
+      description: '新しいタグを追加する'
+      requestBody:
+        description: '追加するタグ'
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  $ref: '#/components/schemas/tagName'
+              required:
+                - name
+      responses:
+        '201':
+          description: '正常'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    $ref: '#/components/schemas/id'
+                  name:
+                    $ref: '#/components/schemas/tagName'
+                required:
+                  - id
+                  - name
+  /tags/{id}:
+    get:
+      tags:
+        - 'Tag'
+      operationId: 'getTag'
+      summary: 'タグ詳細取得API'
+      description: 'タグIDを指定して、タグの詳細情報を取得する'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/id'
+      responses:
+        '200':
+          description: '正常'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    $ref: '#/components/schemas/id'
+                  name:
+                    $ref: '#/components/schemas/tagName'
+                required:
+                  - id
+                  - name
+        '404':
+          description: 'Not Found'
+          content:
+            application/json:
+              schema:
+                type: object
+    patch:
+      tags:
+        - 'Tag'
+      operationId: 'updateTag'
+      summary: 'タグ更新API'
+      description: '既存のタグを更新する'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/id'
+      requestBody:
+        description: '更新するタグの情報'
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  $ref: '#/components/schemas/tagName'
+      responses:
+        '204':
+          description: '正常'
+    delete:
+      tags:
+        - 'Tag'
+      operationId: 'deleteTag'
+      summary: 'タグ削除API'
+      description: 'タグIDを指定して、タグを削除する'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/id'
+      responses:
+        '204':
+          description: '正常'
+        '404':
+          description: 'Not Found'
 
 components:
   schemas:
@@ -203,3 +343,6 @@ components:
     meaning:
       type: string
       example: '例'
+    tagName:
+      type: string
+      example: 'programming'
