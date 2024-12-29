@@ -1,0 +1,42 @@
+desc: タグの CRUD テスト
+runners:
+  req:
+    endpoint: ${API_HOST}
+    openapi3: ../openapi/main.yaml
+steps:
+  getTags:
+    desc: タグ一覧取得
+    req:
+      /tags:
+        get: {}
+    test: current.res.status == 200
+  registerTag:
+    desc: タグ登録
+    req:
+      /tags:
+        post:
+          body:
+            application/json:
+              name: example
+    test: current.res.status == 201
+  updateTag:
+    desc: タグ更新
+    req:
+      /tags/{{ steps.registerTag.res.body.id }}:
+        patch:
+          body:
+            application/json:
+              name: updated
+    test: current.res.status == 204
+  getTag:
+    desc: タグ取得
+    req:
+      /tags/{{ steps.registerTag.res.body.id }}:
+        get: {}
+    test: current.res.status == 200
+  deleteTag:
+    desc: タグ削除
+    req:
+      /tags/{{ steps.registerTag.res.body.id }}:
+        delete: {}
+    test: current.res.status == 204
