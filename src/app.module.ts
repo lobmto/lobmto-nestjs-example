@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { HealthModule } from './health/health.module';
 import { LoggerModule } from './logger/logger.module';
+import { TagsModule } from './tags/tags.module';
 import { WordsModule } from './words/words.module';
 
 @Module({
@@ -17,6 +18,7 @@ import { WordsModule } from './words/words.module';
     }),
     LoggerModule,
     HealthModule,
+    TagsModule,
     WordsModule,
   ],
 })
