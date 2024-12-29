@@ -121,7 +121,7 @@ describe('WordsController (e2e)', () => {
       expect(response.status).toBe(204);
     });
 
-    it.skip('should return 404 when ID does not exist', async () => {
+    it('should return 404 when ID does not exist', async () => {
       const response = await request(app.getHttpServer())
         .patch('/words/00000000-0000-0000-0000-000000000000')
         .send({
