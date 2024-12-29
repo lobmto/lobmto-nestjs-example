@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { HealthModule } from './health/health.module';
+import { LoggerModule } from './logger/logger.module';
 import { WordsModule } from './words/words.module';
 
 @Module({
@@ -14,6 +15,7 @@ import { WordsModule } from './words/words.module';
       database: 'main',
       autoLoadEntities: true,
     }),
+    LoggerModule,
     HealthModule,
     WordsModule,
   ],
