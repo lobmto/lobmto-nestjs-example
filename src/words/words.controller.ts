@@ -20,7 +20,7 @@ export class WordsController {
   constructor(private readonly wordsService: WordsService) {}
 
   @Get()
-  async getStatus(): Promise<{
+  async getWords(): Promise<{
     words: { id: string; word: string; meaning: string }[];
   }> {
     const words = await this.wordsService.findWords();
