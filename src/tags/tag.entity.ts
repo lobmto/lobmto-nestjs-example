@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { WordEntity } from 'src/words/word.entity';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToMany } from 'typeorm';
 
 @Entity('tag')
 export class TagEntity {
@@ -7,4 +8,7 @@ export class TagEntity {
 
   @Column()
   name: string;
+
+  @ManyToMany(() => WordEntity, (word) => word.tags)
+  words: WordEntity[];
 }
