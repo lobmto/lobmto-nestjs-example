@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { Tag } from './tag.domain';
 import { TagEntity } from './tag.entity';
 
@@ -37,11 +37,23 @@ export class TagsRepository {
     return Tag.reconstruct(entity.id, entity.name);
   }
 
+  async findByIds(ids: string[]): Promise<Tag[]> {
+    if (ids.length === 0) return [];
+    const entities = await this.tagsRepository.find({ where: { id: In(ids) } });
+    return entities.map((entity) => Tag.reconstruct(entity.id, entity.name));
+  }
+
   async updateTag(tag: Tag): Promise<void> {
     const entity = this.toEntity(tag);
     await this.tagsRepository.save(entity);
   }
 
+  /**
+   * タグを削除する。
+   * タグを削除しても単語とのリレーションは残る。
+   * (無効なリレーションは単語の取得時には無視され、単語の更新時に削除される)
+   * @param id 削除するタグのID
+   */
   async deleteTag(id: string): Promise<boolean> {
     const result = await this.tagsRepository.delete(id);
 

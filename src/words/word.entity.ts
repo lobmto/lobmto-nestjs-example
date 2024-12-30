@@ -18,6 +18,8 @@ export class WordEntity {
   @Column()
   meaning: string;
 
+  // 別集約のため、createForeignKeyConstraints を false に設定している
+  // リレーション設定しない方が良い気もするが、 TypeORM の練習として記述する
   @ManyToMany(() => TagEntity, (tag) => tag.words, {
     createForeignKeyConstraints: false,
   })

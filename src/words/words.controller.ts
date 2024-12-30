@@ -21,7 +21,12 @@ export class WordsController {
 
   @Get()
   async getWords(): Promise<{
-    words: { id: string; word: string; meaning: string }[];
+    words: {
+      id: string;
+      word: string;
+      meaning: string;
+      tagList: { id: string }[];
+    }[];
   }> {
     const words = await this.wordsService.findWords();
     return {
@@ -29,31 +34,40 @@ export class WordsController {
         id: word.id,
         word: word.word,
         meaning: word.meaning,
+        tagList: word.tagIdList.map((id) => ({ id })),
       })),
     };
   }
 
   @Post()
-  async registerWord(
-    @Body() word: RegisterWordRequest,
-  ): Promise<{ id: string; word: string; meaning: string }> {
+  async registerWord(@Body() word: RegisterWordRequest): Promise<{
+    id: string;
+    word: string;
+    meaning: string;
+    tagList: { id: string }[];
+  }> {
     const createdWord = await this.wordsService.registerWord(word);
     return {
       id: createdWord.id,
       word: createdWord.word,
       meaning: createdWord.meaning,
+      tagList: createdWord.tagIdList.map((id: string) => ({ id })),
     };
   }
 
   @Get(':id')
-  async getWord(
-    @Param() { id }: WordIdRequest,
-  ): Promise<{ id: string; word: string; meaning: string }> {
+  async getWord(@Param() { id }: WordIdRequest): Promise<{
+    id: string;
+    word: string;
+    meaning: string;
+    tagList: { id: string }[];
+  }> {
     const word = await this.wordsService.findById(id);
     return {
       id: word.id,
       word: word.word,
       meaning: word.meaning,
+      tagList: word.tagIdList.map((id) => ({ id })),
     };
   }
 

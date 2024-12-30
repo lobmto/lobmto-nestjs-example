@@ -1,0 +1,80 @@
+desc: 単語に紐づくタグが削除された場合のテスト
+runners:
+  req:
+    endpoint: ${API_HOST}
+    openapi3: ../openapi/main.yaml
+  db: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@localhost:5432/${POSTGRES_DB}?sslmode=disable
+steps:
+
+# 単語の更新時に無効なタグのリレーションも削除されることを確認
+  registerWord:
+    desc: 単語登録
+    req:
+      /words:
+        post:
+          body:
+            application/json:
+              word: example
+              meaning: 例
+              tagIdList: []
+    test: current.res.status == 201
+  insertRemovedTag:
+    db:
+      query: INSERT INTO word_tag (word_id, tag_id) VALUES ('{{ steps.registerWord.res.body.id }}', '00000000-0000-0000-0000-000000000000')
+  getWords:
+    desc: 単語一覧取得
+    req:
+      /words:
+        get: {}
+    test: current.res.status == 200
+  getWord:
+    desc: 単語取得 (タグが除外されていることを確認)
+    req:
+      /words/{{ steps.registerWord.res.body.id }}:
+        get: {}
+    test: |
+      current.res.status == 200 
+      && current.res.body.tagList == []
+  updateWord:
+    desc: 単語更新
+    req:
+      /words/{{ steps.registerWord.res.body.id }}:
+        patch:
+          body:
+            application/json:
+              word: example2
+              meaning: 例2
+    test: current.res.status == 204
+  selectTagRelations:
+    desc: 無効なタグのリレーションが削除されていることを確認
+    db:
+      query: SELECT count(*) FROM word_tag WHERE word_id = '{{ steps.registerWord.res.body.id }}'
+    test: current.rows[0].count == 0
+
+# 単語の削除時に無効なタグのリレーションも削除されることを確認
+
+  registerWordForDelete:
+    desc: 単語登録
+    req:
+      /words:
+        post:
+          body:
+            application/json:
+              word: example
+              meaning: 例
+              tagIdList: []
+    test: current.res.status == 201
+  insertRemovedTagForDelete:
+    db:
+      query: INSERT INTO word_tag (word_id, tag_id) VALUES ('{{ steps.registerWord.res.body.id }}', '00000000-0000-0000-0000-000000000000')
+  deleteWord:
+    desc: 単語削除
+    req:
+      /words/{{ steps.registerWord.res.body.id }}:
+        delete: {}
+    test: current.res.status == 204
+  selectTagRelationsForDelete:
+    desc: 無効なタグのリレーションが削除されていることを確認
+    db:
+      query: SELECT count(*) FROM word_tag WHERE word_id = '{{ steps.registerWord.res.body.id }}'
+    test: current.rows[0].count == 0
