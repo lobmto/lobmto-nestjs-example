@@ -42,6 +42,7 @@ describe('WordsController (e2e)', () => {
       const word = {
         word: 'test',
         meaning: 'テスト',
+        tagIdList: [],
       } satisfies RegisterWordRequest;
 
       const response = await request(app.getHttpServer())
@@ -53,6 +54,7 @@ describe('WordsController (e2e)', () => {
         id: expect.any(String),
         word: word.word,
         meaning: word.meaning,
+        tagList: [],
       });
     });
 
@@ -68,6 +70,57 @@ describe('WordsController (e2e)', () => {
 
       expect(response.status).toBe(400);
     });
+
+    it.each([
+      ['invalid uuid', ['invalid-uuid']],
+      [
+        'duplicate uuid',
+        [
+          '00000000-0000-0000-0000-000000000000',
+          '00000000-0000-0000-0000-000000000000',
+        ],
+      ],
+      [
+        'too many tags',
+        [
+          '00000000-0000-0000-0000-000000000000',
+          '00000000-0000-0000-0000-000000000001',
+          '00000000-0000-0000-0000-000000000002',
+          '00000000-0000-0000-0000-000000000003',
+          '00000000-0000-0000-0000-000000000004',
+          '00000000-0000-0000-0000-000000000005',
+        ],
+      ],
+    ])(
+      'should return 400 when tagIdList is invalid [%s]',
+      async (title, tagIdList) => {
+        const word = {
+          word: 'test',
+          meaning: 'テスト',
+          tagIdList,
+        } satisfies RegisterWordRequest;
+
+        const response = await request(app.getHttpServer())
+          .post('/words')
+          .send(word);
+
+        expect(response.status).toBe(400);
+      },
+    );
+
+    it('should return 404 when tag is not found', async () => {
+      const word = {
+        word: 'test',
+        meaning: 'テスト',
+        tagIdList: ['00000000-0000-0000-0000-000000000000'],
+      } satisfies RegisterWordRequest;
+
+      const response = await request(app.getHttpServer())
+        .post('/words')
+        .send(word);
+
+      expect(response.status).toBe(404);
+    });
   });
 
   describe('GET /words/:id', () => {
@@ -77,6 +130,7 @@ describe('WordsController (e2e)', () => {
         .send({
           word: 'test',
           meaning: 'テスト',
+          tagIdList: [],
         } satisfies RegisterWordRequest);
 
       const { id } = createResponse.body;
@@ -87,6 +141,7 @@ describe('WordsController (e2e)', () => {
         id: expect.any(String),
         word: 'test',
         meaning: 'テスト',
+        tagList: [],
       });
     });
 
@@ -112,6 +167,7 @@ describe('WordsController (e2e)', () => {
         .send({
           word: 'test',
           meaning: 'テスト',
+          tagIdList: [],
         } satisfies RegisterWordRequest);
 
       const { id } = createResponse.body;
@@ -129,8 +185,32 @@ describe('WordsController (e2e)', () => {
       const response = await request(app.getHttpServer())
         .patch('/words/00000000-0000-0000-0000-000000000000')
         .send({
+          word: 'updated-word',
           meaning: '更新後の値',
+          tagIdList: [],
         } satisfies UpdateWordRequest);
+
+      expect(response.status).toBe(404);
+    });
+
+    it('should return 404 when tag is not found', async () => {
+      const createResponse = await request(app.getHttpServer())
+        .post('/words')
+        .send({
+          word: 'test',
+          meaning: 'テスト',
+          tagIdList: [],
+        } satisfies RegisterWordRequest);
+
+      const { id } = createResponse.body;
+
+      const response = await request(app.getHttpServer())
+        .patch(`/words/${id}`)
+        .send({
+          word: 'updated-word',
+          meaning: 'テスト',
+          tagIdList: ['00000000-0000-0000-0000-000000000000'],
+        } satisfies RegisterWordRequest);
 
       expect(response.status).toBe(404);
     });
@@ -145,12 +225,56 @@ describe('WordsController (e2e)', () => {
       expect(response.status).toBe(400);
     });
 
+    it.each([
+      ['invalid uuid', ['invalid-uuid']],
+      [
+        'duplicate uuid',
+        [
+          '00000000-0000-0000-0000-000000000000',
+          '00000000-0000-0000-0000-000000000000',
+        ],
+      ],
+      [
+        'too many tags',
+        [
+          '00000000-0000-0000-0000-000000000000',
+          '00000000-0000-0000-0000-000000000001',
+          '00000000-0000-0000-0000-000000000002',
+          '00000000-0000-0000-0000-000000000003',
+          '00000000-0000-0000-0000-000000000004',
+          '00000000-0000-0000-0000-000000000005',
+        ],
+      ],
+    ])(
+      'should return 400 when tagIdList is invalid [%s]',
+      async (title, tagIdList) => {
+        const createResponse = await request(app.getHttpServer())
+          .post('/words')
+          .send({
+            word: 'test',
+            meaning: 'テスト',
+            tagIdList: [],
+          } satisfies RegisterWordRequest);
+
+        const { id } = createResponse.body;
+
+        const response = await request(app.getHttpServer())
+          .patch(`/words/${id}`)
+          .send({
+            tagIdList,
+          } satisfies UpdateWordRequest);
+
+        expect(response.status).toBe(400);
+      },
+    );
+
     it('should return 400 when request body is invalid', async () => {
       const createResponse = await request(app.getHttpServer())
         .post('/words')
         .send({
           word: 'test',
           meaning: 'テスト',
+          tagIdList: [],
         } satisfies RegisterWordRequest);
 
       const { id } = createResponse.body;
@@ -172,6 +296,7 @@ describe('WordsController (e2e)', () => {
         .send({
           word: 'test',
           meaning: 'テスト',
+          tagIdList: [],
         } satisfies RegisterWordRequest);
 
       const { id } = createResponse.body;

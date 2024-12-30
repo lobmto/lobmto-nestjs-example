@@ -1,4 +1,11 @@
-import { IsOptional, IsString, IsUUID } from 'class-validator';
+import {
+  ArrayMaxSize,
+  ArrayUnique,
+  IsArray,
+  IsOptional,
+  IsString,
+  IsUUID,
+} from 'class-validator';
 
 export class RegisterWordRequest {
   @IsString()
@@ -6,6 +13,12 @@ export class RegisterWordRequest {
 
   @IsString()
   meaning: string;
+
+  @IsArray()
+  @ArrayUnique()
+  @ArrayMaxSize(5)
+  @IsUUID(undefined, { each: true })
+  tagIdList: string[];
 }
 
 export class WordIdRequest {
@@ -21,4 +34,11 @@ export class UpdateWordRequest {
   @IsString()
   @IsOptional()
   meaning?: string;
+
+  @IsArray()
+  @IsUUID(undefined, { each: true })
+  @IsOptional()
+  @ArrayUnique()
+  @ArrayMaxSize(5)
+  tagIdList?: string[];
 }

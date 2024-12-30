@@ -17,8 +17,8 @@
     "test": "jest ./src/**/*.spec.ts",
     "test:e2e": "jest ./e2e-test/*.e2e-spec.ts",
     "test:api": "runn --scopes read:parent run api-tests/*.yml",
-    "migration:generate": "typeorm-ts-node-commonjs migration:generate -d ./src/ormconfig.ts src/migrations/migrate",
-    "migration:run": "typeorm-ts-node-commonjs migration:run -d ./src/ormconfig.ts"
+    "migration:generate": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js  migration:generate -d ./src/ormconfig.ts src/migrations/migrate",
+    "migration:run": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:run -d ./src/ormconfig.ts"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",

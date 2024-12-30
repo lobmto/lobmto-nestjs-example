@@ -67,10 +67,13 @@ paths:
                           $ref: '#/components/schemas/word'
                         meaning:
                           $ref: '#/components/schemas/meaning'
+                        tagList:
+                          $ref: '#/components/schemas/tagList'
                       required:
                         - id
                         - word
                         - meaning
+                        - tagList
                 required:
                   - words
     post:
@@ -91,9 +94,12 @@ paths:
                   $ref: '#/components/schemas/word'
                 meaning:
                   $ref: '#/components/schemas/meaning'
+                tagIdList:
+                  $ref: '#/components/schemas/tagIdList'
               required:
                 - word
                 - meaning
+                - tagIdList
       responses:
         '201':
           description: '正常'
@@ -108,10 +114,13 @@ paths:
                     $ref: '#/components/schemas/word'
                   meaning:
                     $ref: '#/components/schemas/meaning'
+                  tagList:
+                    $ref: '#/components/schemas/tagList'
                 required:
                   - id
                   - word
                   - meaning
+                  - tagList
   /words/{id}:
     get:
       tags:
@@ -139,10 +148,13 @@ paths:
                     $ref: '#/components/schemas/word'
                   meaning:
                     $ref: '#/components/schemas/meaning'
+                  tagList:
+                    $ref: '#/components/schemas/tagList'
                 required:
                   - id
                   - word
                   - meaning
+                  - tagList
         '404':
           description: 'Not Found'
           content:
@@ -173,6 +185,8 @@ paths:
                   $ref: '#/components/schemas/word'
                 meaning:
                   $ref: '#/components/schemas/meaning'
+                tagIdList:
+                  $ref: '#/components/schemas/tagIdList'
       responses:
         '204':
           description: '正常'
@@ -346,3 +360,19 @@ components:
     tagName:
       type: string
       example: 'programming'
+    tagIdList:
+      type: array
+      maxItems: 5
+      items:
+        $ref: '#/components/schemas/id'
+    tagList:
+      type: array
+      maxItems: 5
+      items:
+        type: object
+        properties:
+          id:
+            $ref: '#/components/schemas/id'
+        required:
+          - id
+

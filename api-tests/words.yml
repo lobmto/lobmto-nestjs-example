@@ -3,6 +3,7 @@ runners:
   req:
     endpoint: ${API_HOST}
     openapi3: ../openapi/main.yaml
+  db: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@localhost:5432/${POSTGRES_DB}
 steps:
   getWords:
     desc: 単語一覧取得
@@ -19,6 +20,7 @@ steps:
             application/json:
               word: example
               meaning: 例
+              tagIdList: []
     test: current.res.status == 201
   updateWord:
     desc: 単語更新
