@@ -1,10 +1,11 @@
-import { TagEntity } from 'src/tags/tag.entity';
 import {
   Entity,
   Column,
   PrimaryGeneratedColumn,
-  JoinTable,
-  ManyToMany,
+  OneToMany,
+  ManyToOne,
+  Index,
+  JoinColumn,
 } from 'typeorm';
 
 @Entity('word')
@@ -18,15 +19,29 @@ export class WordEntity {
   @Column()
   meaning: string;
 
-  // 別集約のため、createForeignKeyConstraints を false に設定している
-  // リレーション設定しない方が良い気もするが、 TypeORM の練習として記述する
-  @ManyToMany(() => TagEntity, (tag) => tag.words, {
-    createForeignKeyConstraints: false,
+  @OneToMany(() => WordTagIdEntity, (wordTag) => wordTag.word, {
+    cascade: true,
   })
-  @JoinTable({
-    name: 'word_tag',
-    joinColumn: { name: 'word_id', referencedColumnName: 'id' },
-    inverseJoinColumn: { name: 'tag_id', referencedColumnName: 'id' },
+  wordTagIdList: WordTagIdEntity[];
+}
+
+// タグは別集約とみなす（ことにした）ので、ID参照でリレーションを設定する
+@Entity('word_tag_id')
+@Index(['tagId', 'wordId'], { unique: true })
+export class WordTagIdEntity {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @Column('uuid')
+  tagId: string;
+
+  @Column('uuid', { nullable: false })
+  wordId: string;
+
+  @ManyToOne(() => WordEntity, (word) => word.wordTagIdList, {
+    onDelete: 'CASCADE',
+    orphanedRowAction: 'delete',
   })
-  tags: TagEntity[];
+  @JoinColumn({ name: 'wordId', referencedColumnName: 'id' })
+  word: WordEntity;
 }

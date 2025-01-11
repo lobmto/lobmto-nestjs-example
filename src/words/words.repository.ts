@@ -1,9 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { TagEntity } from 'src/tags/tag.entity';
 import { Repository } from 'typeorm';
 import { Word } from './word.domain';
-import { WordEntity } from './word.entity';
+import { WordEntity, WordTagIdEntity } from './word.entity';
 
 @Injectable()
 export class WordsRepository {
@@ -17,39 +16,29 @@ export class WordsRepository {
     entity.id = word.id;
     entity.word = word.word;
     entity.meaning = word.meaning;
-    entity.tags = word.tagIdList.map((id) => ({ id })) as TagEntity[];
+    entity.wordTagIdList = word.tagIdList.map((tagId) => {
+      const wordTagIdEntity = new WordTagIdEntity();
+      wordTagIdEntity.tagId = tagId;
+      return wordTagIdEntity;
+    });
     return entity;
   }
 
   /**
-   * 単語とタグのリレーションを全て削除する。
-   * 別集約なこともあり SQL で外部キーを設定していないため、逐次手動で削除する。
-   * @param word リレーションを削除する単語
-   */
-  async removeAllTagRelations(word: Word): Promise<void> {
-    await this.wordsRepository
-      .createQueryBuilder()
-      .delete()
-      .from('word_tag')
-      .where('word_id = :wordId', { wordId: word.id })
-      .execute();
-  }
-
-  /**
-   * 単語を全て取得する。
-   * タグ ID も含めて取得するが、存在しないタグは ORM によって除外される。
+   * 単語のリストを取得する
+   * タグIDのリストには削除済みが含まれる可能性がある。
    * @returns 単語のリスト
    */
   async findWords(): Promise<Word[]> {
     const wordEntities = await this.wordsRepository.find({
-      relations: { tags: true },
+      relations: { wordTagIdList: true },
     });
     return wordEntities.map((word) =>
       Word.reconstruct(
         word.id,
         word.word,
         word.meaning,
-        word.tags.map(({ id }) => id),
+        word.wordTagIdList.map(({ tagId }) => tagId),
       ),
     );
   }
@@ -62,14 +51,20 @@ export class WordsRepository {
       saved.id,
       saved.word,
       saved.meaning,
-      saved.tags.map(({ id }) => id),
+      saved.wordTagIdList.map(({ tagId }) => tagId),
     );
   }
 
+  /**
+   * 単語を取得する
+   * タグIDのリストには削除済みが含まれる可能性がある。
+   * @param id 単語ID
+   * @returns 単語
+   */
   async findById(id: string): Promise<Word | null> {
     const entity = await this.wordsRepository.findOne({
       where: { id },
-      relations: { tags: true },
+      relations: { wordTagIdList: true },
     });
 
     if (!entity) return null;
@@ -77,19 +72,16 @@ export class WordsRepository {
       entity.id,
       entity.word,
       entity.meaning,
-      entity.tags.map(({ id }) => id),
+      entity.wordTagIdList.map(({ tagId }) => tagId),
     );
   }
 
   async updateWord(word: Word): Promise<void> {
-    await this.removeAllTagRelations(word);
-
     const entity = this.toEntity(word);
     await this.wordsRepository.save(entity);
   }
 
   async deleteWord(word: Word): Promise<void> {
-    await this.removeAllTagRelations(word);
     await this.wordsRepository.delete(word.id);
   }
 }
