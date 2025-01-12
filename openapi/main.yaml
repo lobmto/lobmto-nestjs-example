@@ -65,14 +65,14 @@ paths:
                           $ref: '#/components/schemas/id'
                         word:
                           $ref: '#/components/schemas/word'
-                        meaning:
-                          $ref: '#/components/schemas/meaning'
+                        meaningList:
+                          $ref: '#/components/schemas/meaningList'
                         tagList:
                           $ref: '#/components/schemas/tagList'
                       required:
                         - id
                         - word
-                        - meaning
+                        - meaningList
                         - tagList
                 required:
                   - words
@@ -92,13 +92,13 @@ paths:
               properties:
                 word:
                   $ref: '#/components/schemas/word'
-                meaning:
-                  $ref: '#/components/schemas/meaning'
+                meaningList:
+                  $ref: '#/components/schemas/meaningList'
                 tagIdList:
                   $ref: '#/components/schemas/tagIdList'
               required:
                 - word
-                - meaning
+                - meaningList
                 - tagIdList
       responses:
         '201':
@@ -112,14 +112,14 @@ paths:
                     $ref: '#/components/schemas/id'
                   word:
                     $ref: '#/components/schemas/word'
-                  meaning:
-                    $ref: '#/components/schemas/meaning'
+                  meaningList:
+                    $ref: '#/components/schemas/meaningList'
                   tagList:
                     $ref: '#/components/schemas/tagList'
                 required:
                   - id
                   - word
-                  - meaning
+                  - meaningList
                   - tagList
   /words/{id}:
     get:
@@ -146,14 +146,14 @@ paths:
                     $ref: '#/components/schemas/id'
                   word:
                     $ref: '#/components/schemas/word'
-                  meaning:
-                    $ref: '#/components/schemas/meaning'
+                  meaningList:
+                    $ref: '#/components/schemas/meaningList'
                   tagList:
                     $ref: '#/components/schemas/tagList'
                 required:
                   - id
                   - word
-                  - meaning
+                  - meaningList
                   - tagList
         '404':
           description: 'Not Found'
@@ -183,8 +183,8 @@ paths:
               properties:
                 word:
                   $ref: '#/components/schemas/word'
-                meaning:
-                  $ref: '#/components/schemas/meaning'
+                meaningList:
+                  $ref: '#/components/schemas/meaningList'
                 tagIdList:
                   $ref: '#/components/schemas/tagIdList'
       responses:
@@ -357,6 +357,15 @@ components:
     meaning:
       type: string
       example: '例'
+    meaningList:
+      type: array
+      items:
+        type: object
+        properties:
+          meaning:
+            $ref: '#/components/schemas/meaning'
+        required:
+          - meaning
     tagName:
       type: string
       example: 'programming'
