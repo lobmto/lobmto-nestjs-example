@@ -16,7 +16,7 @@ export class WordsService {
 
   async registerWord(data: {
     word: string;
-    meaning: string;
+    meaningList: { meaning: string }[];
     tagIdList: string[];
   }): Promise<Word> {
     const tags = await this.tagsRepository.findByIds(data.tagIdList);
@@ -24,7 +24,11 @@ export class WordsService {
       throw new NotFoundException('指定されたタグが見つかりません');
     }
 
-    const word = Word.create(data.word, data.meaning, data.tagIdList);
+    const word = Word.create(
+      data.word,
+      data.meaningList.map(({ meaning }) => meaning),
+      data.tagIdList,
+    );
 
     return this.wordsRepository.registerWord(word);
   }
@@ -41,7 +45,11 @@ export class WordsService {
 
   async updateWord(
     id: string,
-    data: { word?: string; meaning?: string; tagIdList?: string[] },
+    data: {
+      word?: string;
+      meaningList?: { meaning: string }[];
+      tagIdList?: string[];
+    },
   ): Promise<void> {
     // NOTE: 整合性は不要なのでトランザクションは設定していない
     const word = await this.wordsRepository.findById(id);
@@ -54,7 +62,11 @@ export class WordsService {
       throw new NotFoundException('指定されたタグが見つかりません');
     }
 
-    const updatedWord = word.createUpdated(data);
+    const updatedWord = word.createUpdated({
+      word: data.word,
+      meaningList: data.meaningList?.map(({ meaning }) => meaning),
+      tagIdList: data.tagIdList ?? [],
+    });
     await this.wordsRepository.updateWord(updatedWord);
   }
 

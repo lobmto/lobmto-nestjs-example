@@ -24,7 +24,7 @@ export class WordsController {
     words: {
       id: string;
       word: string;
-      meaning: string;
+      meaningList: { meaning: string }[];
       tagList: { id: string }[];
     }[];
   }> {
@@ -33,7 +33,7 @@ export class WordsController {
       words: words.map((word) => ({
         id: word.id,
         word: word.word,
-        meaning: word.meaning,
+        meaningList: word.meaningList.map((meaning) => ({ meaning })),
         tagList: word.tagIdList.map((id) => ({ id })),
       })),
     };
@@ -43,14 +43,14 @@ export class WordsController {
   async registerWord(@Body() word: RegisterWordRequest): Promise<{
     id: string;
     word: string;
-    meaning: string;
+    meaningList: { meaning: string }[];
     tagList: { id: string }[];
   }> {
     const createdWord = await this.wordsService.registerWord(word);
     return {
       id: createdWord.id,
       word: createdWord.word,
-      meaning: createdWord.meaning,
+      meaningList: createdWord.meaningList.map((meaning) => ({ meaning })),
       tagList: createdWord.tagIdList.map((id: string) => ({ id })),
     };
   }
@@ -59,14 +59,14 @@ export class WordsController {
   async getWord(@Param() { id }: WordIdRequest): Promise<{
     id: string;
     word: string;
-    meaning: string;
+    meaningList: { meaning: string }[];
     tagList: { id: string }[];
   }> {
     const word = await this.wordsService.findById(id);
     return {
       id: word.id,
       word: word.word,
-      meaning: word.meaning,
+      meaningList: word.meaningList.map((meaning) => ({ meaning })),
       tagList: word.tagIdList.map((id) => ({ id })),
     };
   }

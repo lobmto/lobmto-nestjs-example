@@ -16,13 +16,30 @@ export class WordEntity {
   @Column()
   word: string;
 
-  @Column()
-  meaning: string;
+  @OneToMany(() => MeaningEntity, (meaning) => meaning.word, {
+    cascade: true,
+  })
+  meaningList: MeaningEntity[];
 
   @OneToMany(() => WordTagIdEntity, (wordTag) => wordTag.word, {
     cascade: true,
   })
   wordTagIdList: WordTagIdEntity[];
+}
+
+@Entity('meaning')
+export class MeaningEntity {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @Column()
+  meaning: string;
+
+  @ManyToOne(() => WordEntity, (word) => word.meaningList, {
+    onDelete: 'CASCADE',
+    orphanedRowAction: 'delete',
+  })
+  word: WordEntity;
 }
 
 // タグは別集約とみなす（ことにした）ので、ID参照でリレーションを設定する
