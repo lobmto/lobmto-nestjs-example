@@ -41,7 +41,7 @@ describe('WordsController (e2e)', () => {
     it('should register a new word', async () => {
       const word = {
         word: 'test',
-        meaning: 'テスト',
+        meaningList: [{ meaning: 'テスト1' }, { meaning: 'テスト2' }],
         tagIdList: [],
       } satisfies RegisterWordRequest;
 
@@ -53,7 +53,7 @@ describe('WordsController (e2e)', () => {
       expect(response.body).toMatchObject({
         id: expect.any(String),
         word: word.word,
-        meaning: word.meaning,
+        meaningList: [{ meaning: 'テスト1' }, { meaning: 'テスト2' }],
         tagList: [],
       });
     });
@@ -61,8 +61,23 @@ describe('WordsController (e2e)', () => {
     it('should return 400 when required fields are missing', async () => {
       const invalidWord = {
         word: 'test',
-        meaning: undefined,
+        meaningList: undefined,
+        tagIdList: [],
       };
+
+      const response = await request(app.getHttpServer())
+        .post('/words')
+        .send(invalidWord);
+
+      expect(response.status).toBe(400);
+    });
+
+    it('should return 400 when meaningList is empty', async () => {
+      const invalidWord = {
+        word: 'test',
+        meaningList: [],
+        tagIdList: [],
+      } satisfies RegisterWordRequest;
 
       const response = await request(app.getHttpServer())
         .post('/words')
@@ -96,7 +111,7 @@ describe('WordsController (e2e)', () => {
       async (title, tagIdList) => {
         const word = {
           word: 'test',
-          meaning: 'テスト',
+          meaningList: [{ meaning: 'テスト' }],
           tagIdList,
         } satisfies RegisterWordRequest;
 
@@ -111,7 +126,7 @@ describe('WordsController (e2e)', () => {
     it('should return 404 when tag is not found', async () => {
       const word = {
         word: 'test',
-        meaning: 'テスト',
+        meaningList: [{ meaning: 'テスト' }],
         tagIdList: ['00000000-0000-0000-0000-000000000000'],
       } satisfies RegisterWordRequest;
 
@@ -129,7 +144,7 @@ describe('WordsController (e2e)', () => {
         .post('/words')
         .send({
           word: 'test',
-          meaning: 'テスト',
+          meaningList: [{ meaning: 'テスト1' }, { meaning: 'テスト2' }],
           tagIdList: [],
         } satisfies RegisterWordRequest);
 
@@ -140,7 +155,7 @@ describe('WordsController (e2e)', () => {
       expect(response.body).toStrictEqual({
         id: expect.any(String),
         word: 'test',
-        meaning: 'テスト',
+        meaningList: [{ meaning: 'テスト1' }, { meaning: 'テスト2' }],
         tagList: [],
       });
     });
@@ -166,7 +181,7 @@ describe('WordsController (e2e)', () => {
         .post('/words')
         .send({
           word: 'test',
-          meaning: 'テスト',
+          meaningList: [{ meaning: '1テスト1' }, { meaning: '1テスト2' }],
           tagIdList: [],
         } satisfies RegisterWordRequest);
 
@@ -175,7 +190,7 @@ describe('WordsController (e2e)', () => {
       const response = await request(app.getHttpServer())
         .patch(`/words/${id}`)
         .send({
-          meaning: '更新後の値',
+          meaningList: [{ meaning: '更新後の値1' }],
         } satisfies UpdateWordRequest);
 
       expect(response.status).toBe(204);
@@ -186,7 +201,7 @@ describe('WordsController (e2e)', () => {
         .patch('/words/00000000-0000-0000-0000-000000000000')
         .send({
           word: 'updated-word',
-          meaning: '更新後の値',
+          meaningList: [{ meaning: '更新後の値' }],
           tagIdList: [],
         } satisfies UpdateWordRequest);
 
@@ -198,7 +213,7 @@ describe('WordsController (e2e)', () => {
         .post('/words')
         .send({
           word: 'test',
-          meaning: 'テスト',
+          meaningList: [{ meaning: 'テスト' }],
           tagIdList: [],
         } satisfies RegisterWordRequest);
 
@@ -208,7 +223,7 @@ describe('WordsController (e2e)', () => {
         .patch(`/words/${id}`)
         .send({
           word: 'updated-word',
-          meaning: 'テスト',
+          meaningList: [{ meaning: 'テスト' }],
           tagIdList: ['00000000-0000-0000-0000-000000000000'],
         } satisfies RegisterWordRequest);
 
@@ -219,7 +234,7 @@ describe('WordsController (e2e)', () => {
       const response = await request(app.getHttpServer())
         .patch('/words/invalid-uuid')
         .send({
-          meaning: '更新後の値',
+          meaningList: [{ meaning: '更新後の値' }],
         } satisfies UpdateWordRequest);
 
       expect(response.status).toBe(400);
@@ -252,7 +267,7 @@ describe('WordsController (e2e)', () => {
           .post('/words')
           .send({
             word: 'test',
-            meaning: 'テスト',
+            meaningList: [{ meaning: 'テスト' }],
             tagIdList: [],
           } satisfies RegisterWordRequest);
 
@@ -273,7 +288,7 @@ describe('WordsController (e2e)', () => {
         .post('/words')
         .send({
           word: 'test',
-          meaning: 'テスト',
+          meaningList: [{ meaning: 'テスト' }],
           tagIdList: [],
         } satisfies RegisterWordRequest);
 
@@ -295,7 +310,7 @@ describe('WordsController (e2e)', () => {
         .post('/words')
         .send({
           word: 'test',
-          meaning: 'テスト',
+          meaningList: [{ meaning: 'テスト' }],
           tagIdList: [],
         } satisfies RegisterWordRequest);
 
