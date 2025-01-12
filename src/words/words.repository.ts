@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Word } from './word.domain';
-import { WordEntity, WordTagIdEntity } from './word.entity';
+import { MeaningEntity, WordEntity, WordTagIdEntity } from './word.entity';
 
 @Injectable()
 export class WordsRepository {
@@ -15,7 +15,11 @@ export class WordsRepository {
     const entity = new WordEntity();
     entity.id = word.id;
     entity.word = word.word;
-    entity.meaning = word.meaning;
+    entity.meaningList = word.meaningList.map((meaning) => {
+      const meaningEntity = new MeaningEntity();
+      meaningEntity.meaning = meaning;
+      return meaningEntity;
+    });
     entity.wordTagIdList = word.tagIdList.map((tagId) => {
       const wordTagIdEntity = new WordTagIdEntity();
       wordTagIdEntity.tagId = tagId;
@@ -31,13 +35,13 @@ export class WordsRepository {
    */
   async findWords(): Promise<Word[]> {
     const wordEntities = await this.wordsRepository.find({
-      relations: { wordTagIdList: true },
+      relations: { meaningList: true, wordTagIdList: true },
     });
     return wordEntities.map((word) =>
       Word.reconstruct(
         word.id,
         word.word,
-        word.meaning,
+        word.meaningList.map(({ meaning }) => meaning),
         word.wordTagIdList.map(({ tagId }) => tagId),
       ),
     );
@@ -50,7 +54,7 @@ export class WordsRepository {
     return Word.reconstruct(
       saved.id,
       saved.word,
-      saved.meaning,
+      saved.meaningList.map(({ meaning }) => meaning),
       saved.wordTagIdList.map(({ tagId }) => tagId),
     );
   }
@@ -64,14 +68,14 @@ export class WordsRepository {
   async findById(id: string): Promise<Word | null> {
     const entity = await this.wordsRepository.findOne({
       where: { id },
-      relations: { wordTagIdList: true },
+      relations: { meaningList: true, wordTagIdList: true },
     });
 
     if (!entity) return null;
     return Word.reconstruct(
       entity.id,
       entity.word,
-      entity.meaning,
+      entity.meaningList.map(({ meaning }) => meaning),
       entity.wordTagIdList.map(({ tagId }) => tagId),
     );
   }

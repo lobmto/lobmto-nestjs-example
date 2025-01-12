@@ -8,7 +8,7 @@ export class Word {
   private constructor(
     public readonly id: string,
     public readonly word: string,
-    public readonly meaning: string,
+    public readonly meaningList: string[],
     tagIdList: string[],
   ) {
     // TODO: Domain 層のエラー定義
@@ -23,30 +23,30 @@ export class Word {
 
   public static create(
     word: string,
-    meaning: string,
+    meaningList: string[],
     tagIdList: string[],
   ): Word {
-    return new Word(crypto.randomUUID(), word, meaning, tagIdList);
+    return new Word(crypto.randomUUID(), word, meaningList, tagIdList);
   }
 
   public static reconstruct(
     id: string,
     word: string,
-    meaning: string,
+    meaningList: string[],
     tagIdList: string[],
   ): Word {
-    return new Word(id, word, meaning, tagIdList);
+    return new Word(id, word, meaningList, tagIdList);
   }
 
   public createUpdated(data: {
     word?: string;
-    meaning?: string;
+    meaningList?: string[];
     tagIdList?: string[];
   }): Word {
     return new Word(
       this.id,
       data.word ?? this.word,
-      data.meaning ?? this.meaning,
+      data.meaningList ?? this.meaningList,
       data.tagIdList ?? this.tagIdList,
     );
   }

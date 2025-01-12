@@ -1,18 +1,29 @@
+import { Type } from 'class-transformer';
 import {
   ArrayMaxSize,
+  ArrayNotEmpty,
   ArrayUnique,
   IsArray,
   IsOptional,
   IsString,
   IsUUID,
+  ValidateNested,
 } from 'class-validator';
+
+export class MeaningRequest {
+  @IsString()
+  meaning: string;
+}
 
 export class RegisterWordRequest {
   @IsString()
   word: string;
 
-  @IsString()
-  meaning: string;
+  @ArrayNotEmpty()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => MeaningRequest)
+  meaningList: MeaningRequest[];
 
   @IsArray()
   @ArrayUnique()
@@ -31,9 +42,12 @@ export class UpdateWordRequest {
   @IsOptional()
   word?: string;
 
-  @IsString()
+  @ArrayNotEmpty()
+  @IsArray()
+  @ValidateNested({ each: true })
   @IsOptional()
-  meaning?: string;
+  @Type(() => MeaningRequest)
+  meaningList?: MeaningRequest[];
 
   @IsArray()
   @IsUUID(undefined, { each: true })

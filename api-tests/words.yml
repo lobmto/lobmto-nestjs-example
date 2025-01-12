@@ -19,7 +19,7 @@ steps:
           body:
             application/json:
               word: example
-              meaning: 例
+              meaningList: [{ meaning: '例' }]
               tagIdList: []
     test: current.res.status == 201
   updateWord:
@@ -30,7 +30,7 @@ steps:
           body:
             application/json:
               word: example2
-              meaning: 例2
+              meaningList: [{ meaning: '例2' }]
     test: current.res.status == 204
   getWord:
     desc: 単語取得
