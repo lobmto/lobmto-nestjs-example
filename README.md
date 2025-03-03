@@ -68,3 +68,17 @@ npm run start
   ```sh
   npm run test:api
   ```
+
+## Lifecycle
+下記の順で処理が進む
+参考: https://docs.nestjs.com/faq/request-lifecycle#summary
+
+1. Middleware
+2. Guards
+3. Interceptors (pre-controller)
+4. Pipes
+  - ValidationPipe
+5. Controller & Service
+6. Interceptors (post-request)
+7. Exception filters
+  - HttpExceptionFilter
